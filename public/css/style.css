@@ -678,15 +678,20 @@ button { font-family: inherit; cursor: pointer; }
 .tahun-card:hover .tahun-label { color: rgba(255,255,255,0.9); }
 .tahun-badge {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  font-size: 0.65rem;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 0.6rem;
   background: var(--success);
   color: white;
   padding: 0.15rem 0.5rem;
   border-radius: 999px;
   font-weight: 700;
   letter-spacing: 0.04em;
+}
+.tahun-card:has(.tahun-badge) {
+  padding-bottom: 2.2rem;
 }
 
 /* ===== Material Page ===== */
