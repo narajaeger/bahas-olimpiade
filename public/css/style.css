@@ -177,6 +177,50 @@ button { font-family: inherit; cursor: pointer; }
     radial-gradient(800px 400px at 90% 30%, rgba(14, 165, 233, 0.12), transparent 60%),
     var(--bg);
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero .container { position: relative; z-index: 1; }
+
+/* Floating books */
+.hero-books {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.hbook {
+  position: absolute;
+  line-height: 1;
+  user-select: none;
+  will-change: transform;
+}
+.hbook-1 { top: 10%; left: 4%;   font-size: 2.2rem; opacity: 0.18; animation: hbookA 9s  ease-in-out infinite; animation-delay: 0s;   }
+.hbook-2 { top: 12%; right: 5%;  font-size: 1.7rem; opacity: 0.14; animation: hbookB 12s ease-in-out infinite; animation-delay: -4s;  }
+.hbook-3 { top: 42%; left: 2%;   font-size: 2rem;   opacity: 0.12; animation: hbookC 10s ease-in-out infinite; animation-delay: -7s;  }
+.hbook-4 { top: 48%; right: 3%;  font-size: 2.4rem; opacity: 0.16; animation: hbookA 11s ease-in-out infinite; animation-delay: -2s;  }
+.hbook-5 { top: 75%; left: 7%;   font-size: 1.8rem; opacity: 0.13; animation: hbookB 8s  ease-in-out infinite; animation-delay: -5s;  }
+.hbook-6 { top: 78%; right: 6%;  font-size: 2rem;   opacity: 0.15; animation: hbookC 13s ease-in-out infinite; animation-delay: -1s;  }
+.hbook-7 { top: 28%; left: 9%;   font-size: 1.5rem; opacity: 0.10; animation: hbookA 14s ease-in-out infinite; animation-delay: -9s;  }
+.hbook-8 { top: 32%; right: 9%;  font-size: 1.6rem; opacity: 0.11; animation: hbookC 10s ease-in-out infinite; animation-delay: -6s;  }
+
+@keyframes hbookA {
+  0%, 100% { transform: translateY(0px)   rotate(-6deg); }
+  50%       { transform: translateY(-22px) rotate(5deg);  }
+}
+@keyframes hbookB {
+  0%, 100% { transform: translateY(-8px)  translateX(0px)   rotate(8deg);  }
+  35%      { transform: translateY(6px)   translateX(-12px) rotate(-5deg); }
+  70%      { transform: translateY(-18px) translateX(7px)   rotate(3deg);  }
+}
+@keyframes hbookC {
+  0%, 100% { transform: translateY(0px)   rotate(10deg);  }
+  40%      { transform: translateY(-26px) rotate(-6deg);  }
+  75%      { transform: translateY(-10px) rotate(7deg);   }
+}
+
+@media (max-width: 720px) {
+  .hbook { display: none; }
 }
 .hero-badge {
   display: inline-block;
