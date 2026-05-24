@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pembahasan | Bahas Olimpiade</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📘%3C/text%3E%3C/svg%3E">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    body { background: #0f172a; }
+    .viewer-wrap {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .viewer-header {
+      background: #1e293b;
+      color: white;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border-bottom: 1px solid #334155;
+    }
+    .viewer-header h1 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    .viewer-controls {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .viewer-controls button {
+      background: #334155;
+      color: white;
+      border: none;
+      padding: 0.5rem 0.9rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+    .viewer-controls button:hover { background: #475569; }
+    .viewer-controls button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .viewer-controls .back-btn {
+      background: transparent;
+      border: 1px solid #475569;
+    }
+    .page-info {
+      color: #cbd5e1;
+      font-size: 0.9rem;
+      padding: 0 0.5rem;
+    }
+    .pdf-container {
+      flex: 1;
+      overflow: auto;
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      position: relative;
+      /* Anti-screenshot deterrent */
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .pdf-canvas-wrap {
+      position: relative;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      max-width: 100%;
+    }
+    canvas {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+    /* Watermark overlay */
+    .watermark {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: rgba(99, 102, 241, 0.18);
+      font-weight: 700;
+      transform: rotate(-30deg);
+      letter-spacing: 0.2em;
+      text-align: center;
+    }
+    .loader {
+      color: #cbd5e1;
+      padding: 4rem 0;
+      text-align: center;
+    }
+    .spinner {
+      border: 3px solid #334155;
+      border-top-color: #6366f1;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      animation: spin 0.9s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error-box {
+      background: #7f1d1d;
+      color: #fee2e2;
+      padding: 1.5rem;
+      border-radius: 12px;
+      max-width: 500px;
+      margin: 4rem auto;
+      text-align: center;
+    }
+    .error-box a {
+      color: white;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;">
+  <div class="viewer-wrap">
+    <header class="viewer-header">
+      <h1 id="title">Memuat...</h1>
+      <div class="viewer-controls">
+        <button class="back-btn" id="back-btn">← Kembali</button>
+        <button id="prev-page">‹ Prev</button>
+        <span class="page-info"><span id="curr-page">0</span> / <span id="total-pages">0</span></span>
+        <button id="next-page">Next ›</button>
+        <button id="zoom-out">−</button>
+        <button id="zoom-in">+</button>
+      </div>
+    </header>
+
+    <div class="pdf-container" id="pdf-container">
+      <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <p>Memuat pembahasan...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/viewer.js"></script>
+</body>
+</html>

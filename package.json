@@ -1,0 +1,16 @@
+{
+  "name": "bahas-olimpiade",
+  "version": "1.0.0",
+  "description": "Soal dan Pembahasan OSN dan ONMIPA — platform belajar olimpiade",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "keywords": ["osn", "onmipa", "olimpiade", "soal", "pembahasan"],
+  "license": "MIT",
+  "dependencies": {},
+  "engines": {
+    "node": ">=18"
+  }
+}

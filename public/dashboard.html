@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | Bahas Olimpiade</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📘%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="/" class="logo">
+        <span class="logo-icon">📘</span>
+        <span class="logo-text">Bahas Olimpiade</span>
+      </a>
+      <div class="nav-links">
+        <a href="/">Beranda</a>
+        <a href="/osn.html">OSN</a>
+        <a href="/onmipa.html">ONMIPA</a>
+        <button id="logout-btn" class="btn-nav">Keluar</button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page-hero">
+    <div class="container">
+      <h1 class="page-title">Dashboard <span id="user-name"></span></h1>
+      <p class="page-subtitle">Kelola akun dan langganan bidang olimpiadmu di sini.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container dashboard-grid">
+      <div class="dashboard-card">
+        <h3>Status Langganan Aktif</h3>
+        <p class="dashboard-desc">Bidang yang sedang kamu langgani:</p>
+        <ul id="subscriptions-list" class="sub-list">
+          <li class="sub-empty">Belum ada langganan aktif.</li>
+        </ul>
+      </div>
+
+      <div class="dashboard-card">
+        <h3>Berlangganan Bidang Baru</h3>
+        <p class="dashboard-desc">Rp25.000 / bulan untuk 1 bidang. Akses semua pembahasan 2010-2024.</p>
+        <form id="subscribe-form" class="auth-form">
+          <div class="form-group">
+            <label>Jenis Olimpiade</label>
+            <select name="olympiad" id="sub-olympiad" required>
+              <option value="">-- Pilih --</option>
+              <option value="osn">OSN</option>
+              <option value="onmipa">ONMIPA</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Bidang</label>
+            <select name="bidang" id="sub-bidang" required>
+              <option value="">-- Pilih olimpiade dulu --</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Berlangganan (Rp25.000)</button>
+          <p id="sub-msg" class="auth-msg"></p>
+          <p class="info-note">💡 <em>Demo:</em> pembayaran disimulasikan. Di produksi, integrasikan dengan payment gateway (Midtrans/Xendit).</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-bottom container">
+      <p>© 2025 Bahas Olimpiade. Semua hak dilindungi.</p>
+    </div>
+  </footer>
+
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>
