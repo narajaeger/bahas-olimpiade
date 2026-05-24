@@ -14,11 +14,11 @@ const VALID_BIDANG = {
 
 module.exports = async (req, res) => {
   const token = getBearerToken(req);
-  const user = getUserByToken(token);
+  const user = await getUserByToken(token);
   if (!user) return sendJson(res, 401, { error: 'Tidak terautentikasi.' });
 
   if (req.method === 'GET') {
-    return sendJson(res, 200, { subscriptions: getSubscriptions(user.email) });
+    return sendJson(res, 200, { subscriptions: await getSubscriptions(user.email) });
   }
 
   if (req.method === 'POST') {
@@ -34,8 +34,8 @@ module.exports = async (req, res) => {
 
       // NOTE: In production, integrate payment gateway (Midtrans/Xendit)
       // and only call addSubscription after successful payment webhook.
-      addSubscription(user.email, o, b);
-      return sendJson(res, 200, { subscriptions: getSubscriptions(user.email) });
+      await addSubscription(user.email, o, b);
+      return sendJson(res, 200, { subscriptions: await getSubscriptions(user.email) });
     } catch (err) {
       return sendJson(res, 400, { error: err.message });
     }

@@ -1,97 +1,94 @@
-// Shared helpers for serverless functions
-// In-memory store (resets on cold start). For production, swap with a real DB:
-// e.g. Vercel KV, Postgres, Upstash Redis, Supabase.
-
 const crypto = require('crypto');
+const { createClient } = require('@supabase/supabase-js');
 
-// NOTE: a true "shared" store across serverless invocations needs an external DB.
-// Below we use globalThis to keep it for the lifetime of the lambda instance.
-
-if (!globalThis.__BO_STORE__) {
-  globalThis.__BO_STORE__ = {
-    users: new Map(),         // email -> { name, email, passwordHash, salt }
-    tokens: new Map(),        // token -> email
-    subscriptions: new Map(), // email -> [ { olympiad, bidang, expiresAt } ]
-  };
+function getSupabase() {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) throw new Error('SUPABASE_URL dan SUPABASE_SERVICE_ROLE_KEY belum diset.');
+  return createClient(url, key);
 }
-
-const store = globalThis.__BO_STORE__;
 
 function hashPassword(password, salt) {
   return crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('hex');
 }
 
-function createUser(name, email, password) {
-  if (store.users.has(email)) {
-    throw new Error('Email sudah terdaftar.');
-  }
+async function createUser(name, email, password) {
+  const sb = getSupabase();
+  const { data: existing } = await sb.from('users').select('email').eq('email', email).maybeSingle();
+  if (existing) throw new Error('Email sudah terdaftar.');
   const salt = crypto.randomBytes(16).toString('hex');
   const passwordHash = hashPassword(password, salt);
-  store.users.set(email, { name, email, passwordHash, salt });
-  return issueToken(email);
+  const { error } = await sb.from('users').insert({ name, email, password_hash: passwordHash, salt });
+  if (error) throw new Error('Gagal mendaftarkan akun: ' + error.message);
+  return _issueToken(sb, email, name);
 }
 
-function verifyUser(email, password) {
-  const u = store.users.get(email);
+async function verifyUser(email, password) {
+  const sb = getSupabase();
+  const { data: u } = await sb.from('users').select('*').eq('email', email).maybeSingle();
   if (!u) throw new Error('Email atau password salah.');
   const passwordHash = hashPassword(password, u.salt);
-  if (passwordHash !== u.passwordHash) throw new Error('Email atau password salah.');
-  return issueToken(email);
+  if (passwordHash !== u.password_hash) throw new Error('Email atau password salah.');
+  return _issueToken(sb, email, u.name);
 }
 
-function issueToken(email) {
+async function _issueToken(sb, email, name) {
   const token = crypto.randomBytes(24).toString('hex');
-  store.tokens.set(token, email);
-  const u = store.users.get(email);
-  return { token, email, name: u?.name };
+  await sb.from('tokens').insert({ token, email });
+  return { token, email, name };
 }
 
-function getUserByToken(token) {
+async function getUserByToken(token) {
   if (!token) return null;
-  const email = store.tokens.get(token);
-  if (!email) return null;
-  return store.users.get(email);
+  const sb = getSupabase();
+  const { data: t } = await sb.from('tokens').select('email').eq('token', token).maybeSingle();
+  if (!t) return null;
+  const { data: user } = await sb.from('users').select('name, email').eq('email', t.email).maybeSingle();
+  return user || null;
 }
 
-function getSubscriptions(email) {
-  const now = Date.now();
-  const subs = store.subscriptions.get(email) || [];
-  return subs.filter((s) => new Date(s.expiresAt).getTime() > now);
+async function getSubscriptions(email) {
+  const sb = getSupabase();
+  const now = new Date().toISOString();
+  const { data } = await sb.from('subscriptions').select('olympiad, bidang, expires_at').eq('email', email).gt('expires_at', now);
+  return (data || []).map((s) => ({ olympiad: s.olympiad, bidang: s.bidang, expiresAt: s.expires_at }));
 }
 
-function addSubscription(email, olympiad, bidang) {
-  const subs = store.subscriptions.get(email) || [];
-  const now = Date.now();
+async function addSubscription(email, olympiad, bidang) {
+  const sb = getSupabase();
+  const now = new Date();
   const oneMonth = 30 * 24 * 60 * 60 * 1000;
+  const nowIso = now.toISOString();
 
-  // Extend if already exists
-  const existing = subs.find(
-    (s) => s.olympiad === olympiad && s.bidang === bidang && new Date(s.expiresAt).getTime() > now
-  );
+  const { data: existing } = await sb
+    .from('subscriptions')
+    .select('id, expires_at')
+    .eq('email', email)
+    .eq('olympiad', olympiad)
+    .eq('bidang', bidang)
+    .gt('expires_at', nowIso)
+    .maybeSingle();
+
   if (existing) {
-    existing.expiresAt = new Date(new Date(existing.expiresAt).getTime() + oneMonth).toISOString();
+    const newExpiry = new Date(new Date(existing.expires_at).getTime() + oneMonth).toISOString();
+    await sb.from('subscriptions').update({ expires_at: newExpiry }).eq('id', existing.id);
   } else {
-    subs.push({
-      olympiad,
-      bidang,
-      expiresAt: new Date(now + oneMonth).toISOString(),
-    });
+    const expiresAt = new Date(now.getTime() + oneMonth).toISOString();
+    await sb.from('subscriptions').insert({ email, olympiad, bidang, expires_at: expiresAt });
   }
-  store.subscriptions.set(email, subs);
-  return subs;
+
+  return getSubscriptions(email);
 }
 
-function hasActiveSubscription(email, olympiad, bidang) {
-  return getSubscriptions(email).some(
-    (s) => s.olympiad === olympiad && s.bidang === bidang
-  );
+async function hasActiveSubscription(email, olympiad, bidang) {
+  const subs = await getSubscriptions(email);
+  return subs.some((s) => s.olympiad === olympiad && s.bidang === bidang);
 }
 
 function getBearerToken(req) {
   const auth = req.headers['authorization'] || req.headers['Authorization'];
   if (!auth) return null;
-  const parts = auth.split(' ');
-  return parts[1] || null;
+  return auth.split(' ')[1] || null;
 }
 
 function sendJson(res, status, payload) {
@@ -107,11 +104,7 @@ async function readBody(req) {
     req.on('data', (chunk) => (data += chunk));
     req.on('end', () => {
       if (!data) return resolve({});
-      try {
-        resolve(JSON.parse(data));
-      } catch (e) {
-        reject(e);
-      }
+      try { resolve(JSON.parse(data)); } catch (e) { reject(e); }
     });
     req.on('error', reject);
   });

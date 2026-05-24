@@ -7,9 +7,17 @@
     "dev": "vercel dev",
     "deploy": "vercel --prod"
   },
-  "keywords": ["osn", "onmipa", "olimpiade", "soal", "pembahasan"],
+  "keywords": [
+    "osn",
+    "onmipa",
+    "olimpiade",
+    "soal",
+    "pembahasan"
+  ],
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "@supabase/supabase-js": "^2.106.1"
+  },
   "engines": {
     "node": ">=18"
   }

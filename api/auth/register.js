@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail))
       return sendJson(res, 400, { error: 'Email tidak valid.' });
 
-    const result = createUser(String(name).trim(), cleanEmail, password);
+    const result = await createUser(String(name).trim(), cleanEmail, password);
     return sendJson(res, 200, result);
   } catch (err) {
     return sendJson(res, 400, { error: err.message });

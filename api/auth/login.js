@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
     if (!email || !password) return sendJson(res, 400, { error: 'Lengkapi email dan password.' });
 
     const cleanEmail = String(email).trim().toLowerCase();
-    const result = verifyUser(cleanEmail, password);
+    const result = await verifyUser(cleanEmail, password);
     return sendJson(res, 200, result);
   } catch (err) {
     return sendJson(res, 401, { error: err.message });

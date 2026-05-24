@@ -52,13 +52,13 @@ module.exports = async (req, res) => {
 
   // Access control for pembahasan
   if (t === 'pembahasan' && yearNum !== 2024) {
-    const user = getUserByToken(token);
+    const user = await getUserByToken(token);
     if (!user) {
       return sendJson(res, 401, {
         error: 'Pembahasan ini memerlukan langganan. Silakan masuk.',
       });
     }
-    if (!hasActiveSubscription(user.email, o, b)) {
+    if (!await hasActiveSubscription(user.email, o, b)) {
       return sendJson(res, 403, {
         error: `Anda belum berlangganan ${o.toUpperCase()} bidang ${b}.`,
       });
