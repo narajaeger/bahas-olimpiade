@@ -1,5 +1,10 @@
 {
   "version": 2,
+  "functions": {
+    "api/pdf.js": {
+      "includeFiles": "public/pdfs/**"
+    }
+  },
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
