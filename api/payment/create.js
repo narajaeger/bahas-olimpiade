@@ -20,7 +20,7 @@ function buildHeaders(va, apiKey, body) {
   return { 'Content-Type': 'application/json', va, signature, timestamp };
 }
 
-function iPaymuPost(path, body) {
+async function iPaymuPost(body) {
   const va = process.env.IPAYMU_VA;
   const apiKey = process.env.IPAYMU_API_KEY;
   if (!va || !apiKey) throw new Error('IPAYMU_VA dan IPAYMU_API_KEY belum diset di environment variables.');
@@ -32,7 +32,12 @@ function iPaymuPost(path, body) {
 
   return new Promise((resolve, reject) => {
     const req = https.request(
-      { hostname: host, path: `/api/v2${path}`, method: 'POST', headers: { ...headers, 'Content-Length': Buffer.byteLength(bodyStr) } },
+      {
+        hostname: host,
+        path: '/api/v2/payment',
+        method: 'POST',
+        headers: { ...headers, Accept: 'application/json', 'Content-Length': Buffer.byteLength(bodyStr) },
+      },
       (res) => {
         let data = '';
         res.on('data', (c) => (data += c));
@@ -73,19 +78,18 @@ module.exports = async (req, res) => {
 
   let result;
   try {
-    result = await iPaymuPost('/payment/redirect', {
-      account: process.env.IPAYMU_VA,
-      amount: PRICE,
+    result = await iPaymuPost({
       product: [`${o.toUpperCase()} ${bidangLabel} — 1 Bulan`],
       qty: [1],
       price: [PRICE],
-      buyerName: user.name || user.email,
-      buyerEmail: user.email,
-      buyerPhone: '08000000000',
+      amount: PRICE,
       returnUrl: `${siteUrl}/payment-success.html`,
       cancelUrl: `${siteUrl}/dashboard.html`,
       notifyUrl: `${siteUrl}/api/payment/notify`,
       referenceId,
+      buyerName: user.name || user.email,
+      buyerEmail: user.email,
+      buyerPhone: '08000000000',
     });
   } catch (err) {
     return sendJson(res, 500, { error: 'Gagal menghubungi payment gateway: ' + err.message });
