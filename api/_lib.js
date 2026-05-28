@@ -110,6 +110,42 @@ async function readBody(req) {
   });
 }
 
+// Creates a pending payment order.
+// Requires Supabase table (run once in SQL editor):
+//   CREATE TABLE payment_orders (
+//     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+//     reference_id text UNIQUE NOT NULL,
+//     email text NOT NULL,
+//     olympiad text NOT NULL,
+//     bidang text NOT NULL,
+//     amount integer NOT NULL,
+//     status text DEFAULT 'pending',
+//     ipaymu_trx_id text,
+//     created_at timestamptz DEFAULT now()
+//   );
+async function createOrder(referenceId, email, olympiad, bidang, amount) {
+  const sb = getSupabase();
+  const { error } = await sb.from('payment_orders').insert({ reference_id: referenceId, email, olympiad, bidang, amount });
+  if (error) throw new Error('Gagal menyimpan order: ' + error.message);
+}
+
+// Marks an order as paid and activates the subscription. Returns the order or null if not found.
+async function fulfillOrder(referenceId, ipaymuTrxId) {
+  const sb = getSupabase();
+  const { data: order } = await sb
+    .from('payment_orders')
+    .select('*')
+    .eq('reference_id', referenceId)
+    .eq('status', 'pending')
+    .maybeSingle();
+  if (!order) return null;
+  await sb.from('payment_orders')
+    .update({ status: 'paid', ipaymu_trx_id: ipaymuTrxId })
+    .eq('reference_id', referenceId);
+  await addSubscription(order.email, order.olympiad, order.bidang);
+  return order;
+}
+
 module.exports = {
   createUser,
   verifyUser,
@@ -120,4 +156,6 @@ module.exports = {
   getBearerToken,
   sendJson,
   readBody,
+  createOrder,
+  fulfillOrder,
 };

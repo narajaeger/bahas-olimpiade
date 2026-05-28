@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pembayaran Berhasil | Bahas Olimpiade</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📘%3C/text%3E%3C/svg%3E">
+  <style>
+    .success-wrap {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .success-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3rem 2.5rem;
+      text-align: center;
+      max-width: 480px;
+      width: 100%;
+    }
+    .success-icon { font-size: 4rem; margin-bottom: 1rem; }
+    .success-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text); }
+    .success-desc { color: var(--text-muted); line-height: 1.6; margin-bottom: 2rem; }
+    .success-note {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 1rem;
+      font-size: 0.875rem;
+      color: #166534;
+      margin-bottom: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="/" class="logo">
+        <span class="logo-icon">📘</span>
+        <span class="logo-text">Bahas Olimpiade</span>
+      </a>
+    </div>
+  </nav>
+
+  <div class="success-wrap">
+    <div class="container">
+      <div class="success-card" style="margin: 0 auto;">
+        <div class="success-icon">✅</div>
+        <h1 class="success-title">Pembayaran Berhasil!</h1>
+        <p class="success-desc">
+          Terima kasih telah berlangganan Bahas Olimpiade.
+          Langgananmu sudah aktif dan kamu bisa langsung mengakses semua pembahasan.
+        </p>
+        <div class="success-note">
+          Jika langganan belum muncul di dashboard, tunggu beberapa detik lalu refresh halaman.
+        </div>
+        <a href="/dashboard.html" class="btn btn-primary btn-block">Buka Dashboard</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

@@ -71,30 +71,34 @@
   document.getElementById('subscribe-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const msg = document.getElementById('sub-msg');
+    const btn = e.target.querySelector('button[type="submit"]');
     msg.className = 'auth-msg';
-    msg.textContent = 'Memproses pembayaran...';
+    msg.textContent = 'Membuat tagihan pembayaran…';
+    btn.disabled = true;
 
     const fd = new FormData(e.target);
     const body = Object.fromEntries(fd.entries());
 
-    const res = await fetch('/api/subscriptions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(body),
-    });
-    const data = await res.json();
-    if (res.status === 200) {
-      msg.classList.add('success');
-      msg.textContent = '✓ Langganan aktif!';
-      e.target.reset();
-      bidangSel.innerHTML = '<option value="">-- Pilih olimpiade dulu --</option>';
-      loadSubscriptions();
-    } else {
+    try {
+      const res = await fetch('/api/payment/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (res.status === 200 && data.paymentUrl) {
+        msg.classList.add('success');
+        msg.textContent = '✓ Mengalihkan ke halaman pembayaran…';
+        window.location.href = data.paymentUrl;
+      } else {
+        msg.classList.add('error');
+        msg.textContent = data.error || 'Gagal membuat pembayaran.';
+        btn.disabled = false;
+      }
+    } catch (err) {
       msg.classList.add('error');
-      msg.textContent = data.error || 'Gagal berlangganan.';
+      msg.textContent = 'Terjadi kesalahan jaringan.';
+      btn.disabled = false;
     }
   });
 

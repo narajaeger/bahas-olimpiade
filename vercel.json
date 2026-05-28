@@ -9,7 +9,9 @@
   "trailingSlash": false,
   "rewrites": [
     { "source": "/api/auth/login", "destination": "/api/auth/login" },
-    { "source": "/api/auth/register", "destination": "/api/auth/register" }
+    { "source": "/api/auth/register", "destination": "/api/auth/register" },
+    { "source": "/api/payment/create", "destination": "/api/payment/create" },
+    { "source": "/api/payment/notify", "destination": "/api/payment/notify" }
   ],
   "headers": [
     {
