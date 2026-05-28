@@ -15,9 +15,11 @@ const {
   sendJson,
 } = require('./_lib');
 
-const VALID_OLYMPIAD = ['osn', 'onmipa'];
+const VALID_OLYMPIAD = ['osn', 'osn-smp', 'osn-sd', 'onmipa'];
 const VALID_BIDANG = {
   osn: ['matematika', 'fisika', 'kimia', 'biologi', 'informatika', 'astronomi', 'ekonomi', 'kebumian', 'geografi'],
+  'osn-smp': ['matematika', 'ipa', 'ips'],
+  'osn-sd': ['matematika', 'ipa'],
   onmipa: ['matematika', 'fisika', 'kimia', 'biologi'],
 };
 

@@ -11,6 +11,8 @@
 
   const BIDANG_BY_OLYMPIAD = {
     osn: ['Matematika', 'Fisika', 'Kimia', 'Biologi', 'Informatika', 'Astronomi', 'Ekonomi', 'Kebumian', 'Geografi'],
+    'osn-smp': ['Matematika', 'IPA', 'IPS'],
+    'osn-sd': ['Matematika', 'IPA'],
     onmipa: ['Matematika', 'Fisika', 'Kimia', 'Biologi'],
   };
 

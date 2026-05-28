@@ -9,8 +9,9 @@
     return;
   }
 
-  const olympiadLabel = olympiad.toUpperCase();
-  const bidangLabel = bidang.charAt(0).toUpperCase() + bidang.slice(1);
+  const OLYMPIAD_LABELS = { osn: 'OSN SMA', 'osn-smp': 'OSN SMP', 'osn-sd': 'OSN SD', onmipa: 'ONMIPA' };
+  const olympiadLabel = OLYMPIAD_LABELS[olympiad] || olympiad.toUpperCase();
+  const bidangLabel = bidang.toUpperCase() === bidang ? bidang : bidang.charAt(0).toUpperCase() + bidang.slice(1);
 
   document.title = `${olympiadLabel} ${bidangLabel} — Pilih Tahun | Bahas Olimpiade`;
   document.getElementById('page-title').textContent = `${olympiadLabel} ${bidangLabel}`;

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pilih Tahun | Bahas Olimpiade</title>
+  <title>OSN SMP — Pilih Bidang | Bahas Olimpiade</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -57,7 +57,6 @@
             <a href="/tahun.html?olympiad=onmipa&bidang=biologi">Biologi</a>
           </div>
         </div>
-        <a href="#" id="back-link">Kembali</a>
         <a href="/login.html" class="btn-nav" id="nav-auth">Masuk</a>
       </div>
     </div>
@@ -65,18 +64,36 @@
 
   <section class="page-hero">
     <div class="container">
-      <div class="breadcrumb" id="breadcrumb"></div>
-      <h1 class="page-title" id="page-title">Pilih Tahun</h1>
+      <div class="breadcrumb">
+        <a href="/">Beranda</a> <span>›</span> <span>OSN SMP</span>
+      </div>
+      <h1 class="page-title">📚 OSN SMP / Sederajat</h1>
       <p class="page-subtitle">
-        Pilih tahun untuk mengakses soal dan pembahasan. Soal selalu gratis untuk semua tahun.
-        Pembahasan tahun 2024 gratis, sedangkan 2010-2023 memerlukan langganan.
+        OSN SMP adalah ajang kompetisi sains tahunan bergengsi untuk siswa SMP dan sederajat di seluruh Indonesia.
+        Pilih bidang yang ingin kamu pelajari di bawah ini.
       </p>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <div class="tahun-grid" id="tahun-grid"></div>
+      <div class="bidang-grid">
+        <a href="/tahun.html?olympiad=osn-smp&bidang=matematika" class="bidang-card" data-color="#6366f1">
+          <div class="bidang-icon">📐</div>
+          <h3>Matematika</h3>
+          <p>Aljabar, geometri, kombinatorika, teori bilangan</p>
+        </a>
+        <a href="/tahun.html?olympiad=osn-smp&bidang=ipa" class="bidang-card" data-color="#22c55e">
+          <div class="bidang-icon">🔬</div>
+          <h3>IPA</h3>
+          <p>Fisika, kimia, biologi dasar</p>
+        </a>
+        <a href="/tahun.html?olympiad=osn-smp&bidang=ips" class="bidang-card" data-color="#f59e0b">
+          <div class="bidang-icon">🌏</div>
+          <h3>IPS</h3>
+          <p>Sejarah, ekonomi, geografi, sosiologi</p>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -86,6 +103,6 @@
     </div>
   </footer>
 
-  <script src="/js/tahun.js"></script>
+  <script src="/js/main.js"></script>
 </body>
 </html>

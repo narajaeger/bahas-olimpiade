@@ -9,6 +9,8 @@ const {
 
 const VALID_BIDANG = {
   osn: ['matematika', 'fisika', 'kimia', 'biologi', 'informatika', 'astronomi', 'ekonomi', 'kebumian', 'geografi'],
+  'osn-smp': ['matematika', 'ipa', 'ips'],
+  'osn-sd': ['matematika', 'ipa'],
   onmipa: ['matematika', 'fisika', 'kimia', 'biologi'],
 };
 
